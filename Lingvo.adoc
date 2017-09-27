@@ -1,0 +1,160 @@
+= Lignvo
+Luciano Barcellos <luciano@radoj.org>
+v0.1, 2017-09-22
+
+== Ponto e vírgula
+
+Toda declaração será terminada por um ponto e vírgula.
+
+
+== Contexto e Dicionário
+
+Cada linha de programa em Lingvo ocorre em um contexto, e em cada contexto háverá  dicionários válidos mapeando cada nome a uma definição respectiva. Os dicionários válidos terão uma ordem de busca, e o significado encontrado no primeiro dicionário será utilizado, ignorando os demais.
+
+Todo contexto terá um dicionário local, que será o primeiro a ser buscado na avaliação de qualquer expressão.
+
+=== Literais
+
+==== Números
+
+1345
+1_345_239
+10.4E+90
+-2E4
+
+==== String
+
+ "teste"
+ 
+ 
+==== Data e hora
+
+ #10/12/2017
+ #2017-09-20
+ 
+O símbolo _#_ representa a grade formada pelo calendário
+
+=== Estendendo o dicionário do contexto
+
+Para definir um novo mapeamento utiliza-se o formato *nome = definição;*
+
+.Exemplo
+    
+    x = 10; <1>
+    y = 2 * x; <2>
+
+<1> Associa nome _x_ ao valor _10_
+<2> Associa o nome _y_ ao valor _20_ (_2 * x_)
+    
+IMPORTANT: Uma definição como a acima estabelece que qualquer menção à _palavra_ *y* significa o mesmo que a menção a *2 * x*. E qualquer menção à _palavra_ *x* significa o mesmo que o número *10*. Não se tratam de declarações de variáveis, mas do estabelecimento de significados permanentes naquele contexto. Posteriormente será visto sobre a definição do equivalente a variáveis.
+
+=== Subcontextos
+
+Os contextos podem ser parte de um contexto mais amplo. A lista de dicionários válidos em um subcontexto se inicia com o dicionário local do contexto e segue com os dicionários dos contextos exteriores.
+
+Um subcontexto é expresso como uma lista de declarações iniciada por *{* e encerrada por *}*.
+
+.Exemplo
+    x = 10;
+    y = 2 * x;
+    Algo = { <1>
+        x = 20; <2>
+        z = x + y; <3>
+    }; <4>
+
+<1> Inicia definição do subcontexto, associado-o ao nome _Algo_
+<2> Cria uma nova entrada no dicionário local para o nome _x_. Referências a _x_ no contexto local serão traduzidas para o valor _20_.
+<3> Define que o valor _z_ está associado ao valor _40_. Na expressão _x + y_ que define o valor _z_, o valor _x_ é obtido do dicionário local do contexto _Algo_, enquanto o valor _y_, ausente no dicionário local, é obtido do dicionário do contexto externo
+<4> Finaliza definição do subcontexto
+
+=== Herança de contextos
+
+Um contexto pode ser definido como a extensão de um outro contexto.
+
+.Exemplo
+    Pessoa = { <1>
+        dataNascimento = #01/01/2017;
+        nome = '';
+    };
+    Escola = { <2>
+        Funcionario = Pessoa + { <3>
+            dataAdmissao = #01/01/2017;
+        };
+        Professor = Funcionario + { <4>
+            disciplina = '';
+        };
+    };
+    
+<1> Define o contexto _Pessoa_, com dois vocábulos: _dataNascimento_ e _nome_
+<2> Define o contexto _Escola_, com dois subcontextos
+<3> Define que no contexto _Funcionario_ há uma _dataAdmissao_, além de _dataNascimento_ e _nome_, herdados do contexto _Pessoa_
+<4> No contexto _Professor_ há uma _disciplina_, além dos vocábulos presentes em _Funcionario_
+
+
+==== Substituição de definições
+
+Na herança de contexto, o contexto derivado tem um dicionário que é copiado do contexto pai e alterado pelas declarações locais, diferente do caso do subcontexto, que inicia com um dicionário vazio e recorre ao contexto externo somente em caso de ausência no subcontexto.
+
+.Exemplo
+    Comum = {
+        x = 10;
+        y = x;
+        Sub = { <1>
+            x = 15; <2>
+            z = x + y; <3> 
+        };
+    };
+    Filho = Comum + { <4>
+        x = 15; <5>
+        z = x + y; <6>
+    };
+    k = Filho.Sub.z; <7>
+    
+<1> Define subcontexto
+<2> Nome local _x_ corresponde ao valor _15_
+<3> O nome _z_ corresponde ao valor _25_, que é a soma de _x_, cujo valor definido no contexto local é 15, com _y_, cujo valor definido no contexto externo é 10
+<4> Define contexto herdado, com um dicionário copiado do contexto _Comum_
+<5> Substitui valor de _x_ no dicionário de _Filho_. Essa substituição, consequentemente, altera também valor de _y_ em _Filho_.
+<6> _z_ corresponde ao valor _30_, que é a soma de _x_, cujo valor foi substituído por _15_, com _y_, cujo valor também foi substituído por _15_ por conta da alteração do valor de _x_
+<7> _Filho_ herda também uma cópia do subcontexto _Sub_
+
+=== Herança homônima
+
+Um subcontexto pode herdar de um outro contexto, porém mantendo o mesmo nome.
+
+.Exemplo
+    Pessoa = {
+        dataNascimento = #01/01/2017;
+        nome = '';
+    };
+    ReceitaFederal = {
+        Pessoa += { <1>
+            CPF = ''; <2>
+        };
+    };
+
+<1> Declara que, no contexto da _ReceitaFederal_, _Pessoa_ possui definições adicionais
+<2> No contexto _ReceitaFederal_, _Pessoa_ possui um _CPF_
+
+NOTE: No exemplo acima _ReceitaFederal.Pessoa_ é um contexto que herda de _Pessoa_
+
+=== Definições parametrizadas
+
+.Exemplo
+    dobro(x) = 2 * x;
+    baskara(a,b,c) = {
+        a = 1; <1>
+        b = 0; <2>
+        c = 0; <3>
+        delta = b² - 4 a c;
+        x1 = (-b + √delta) / 2a;
+        x2 = (-b - √delta) / 2a;
+    };
+    x = baskara(c = -1).x1;
+    w = x1..baskara { 
+        c = -1 
+    };
+    
+Valores literais
+----------------
+
