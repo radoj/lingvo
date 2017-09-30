@@ -116,7 +116,29 @@ Na herança de contexto, o contexto derivado tem um dicionário que é copiado d
 <4> Define contexto herdado, com um dicionário copiado do contexto _Comum_
 <5> Substitui valor de _x_ no dicionário de _Filho_. Essa substituição, consequentemente, altera também valor de _y_ em _Filho_.
 <6> _z_ corresponde ao valor _30_, que é a soma de _x_, cujo valor foi substituído por _15_, com _y_, cujo valor também foi substituído por _15_ por conta da alteração do valor de _x_
-<7> _Filho_ herda também uma cópia do subcontexto _Sub_
+<7> Definição que demonstra que _Filho_ herda também uma cópia do subcontexto _Sub_, presente originalmente em Comum
+
+==== Syntaxe compacta
+
+É possível representar a criação de um subcontexto a partir de uma sintaxe compacta. utilizando parênteses. A associação de novos valores aos nomes é feita pela ordem da definição dos nomes.
+
+.Exemplo
+----
+Multiplicador = {
+    x = 0;
+    y = 0;
+    resultado = x y;
+};
+
+p1 = Multiplicador + { <1>
+    x = 20;
+    y = 40;
+};
+
+p2 = Multiplicador(20,40); <2>
+----
+<1> Sintaxe convencional. _p1.resultado_ tem o valor _800_
+<2> Sintaxe compacta, equivalente à anterior
 
 === Herança homônima
 
@@ -141,19 +163,21 @@ NOTE: No exemplo acima _ReceitaFederal.Pessoa_ é um contexto que herda de _Pess
 === Definições parametrizadas
 
 .Exemplo
-    dobro(x) = 2 * x;
-    baskara(a,b,c) = {
-        a = 1; <1>
-        b = 0; <2>
-        c = 0; <3>
-        delta = b² - 4 a c;
-        x1 = (-b + √delta) / 2a;
-        x2 = (-b - √delta) / 2a;
-    };
-    x = baskara(c = -1).x1;
-    w = x1..baskara { 
-        c = -1 
-    };
+[source]
+----
+dobro(x) = 2 * x;
+baskara = {
+    a = 1; <1>
+    b = 0; <2>
+    c = 0; <3>
+    delta = b² - 4 a c;
+    x1 = (-b + √delta) / 2a;
+    x2 = (-b - √delta) / 2a;
+};
+x = baskara(c = -1).x1;
+y = baskara();
+w = x1..baskara(c = -1);
+----
     
 Valores literais
 ----------------
