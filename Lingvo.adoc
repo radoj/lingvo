@@ -7,32 +7,32 @@ v0.1, 2017-09-22
 Toda declaração será terminada por um ponto e vírgula.
 
 
-== Contexto e Dicionário
+== Literais
 
-Cada linha de programa em Lingvo ocorre em um contexto, e em cada contexto háverá  dicionários válidos mapeando cada nome a uma definição respectiva. Os dicionários válidos terão uma ordem de busca, e o significado encontrado no primeiro dicionário será utilizado, ignorando os demais.
-
-Todo contexto terá um dicionário local, que será o primeiro a ser buscado na avaliação de qualquer expressão.
-
-=== Literais
-
-==== Números
+=== Números
 
 1345
 1_345_239
 10.4E+90
 -2E4
 
-==== String
+=== String
 
  "teste"
  
  
-==== Data e hora
+=== Data e hora
 
  #10/12/2017
  #2017-09-20
  
 O símbolo _#_ representa a grade formada pelo calendário
+
+== Contexto e Dicionário
+
+Cada linha de programa em Lingvo ocorre em um contexto, e em cada contexto háverá  dicionários válidos mapeando cada nome a uma definição respectiva. Os dicionários válidos terão uma ordem de busca, e o significado encontrado no primeiro dicionário será utilizado, ignorando os demais.
+
+Todo contexto terá um dicionário local, que será o primeiro a ser buscado na avaliação de qualquer expressão.
 
 === Estendendo o dicionário do contexto
 
