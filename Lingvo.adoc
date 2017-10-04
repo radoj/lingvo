@@ -9,17 +9,18 @@ Toda declaração será terminada por um ponto e vírgula.
 
 == Literais
 
-=== Números
-
+.Números
+----
 1345
 1_345_239
 10.4E+90
 -2E4
+----
 
-=== String
-
- "teste"
- 
+.String
+----
+"teste"
+---- 
  
 === Data e hora
 
@@ -27,6 +28,24 @@ Toda declaração será terminada por um ponto e vírgula.
  #2017-09-20
  
 O símbolo _#_ representa a grade formada pelo calendário
+
+== Operações matemáticas
+
+.Operações básicas
+----
+soma = x + y;
+diferenca = x - y;
+produto = x y;
+quociente = x / y;
+----
+
+.Potenciação e radiciação
+----
+potencia = x ^ y;
+quadrado = x²;
+cubo = x³;
+raizQuadrada = √x;
+----
 
 == Contexto e Dicionário
 
