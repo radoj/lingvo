@@ -154,7 +154,76 @@ NOTE: No exemplo acima _ReceitaFederal.Pessoa_ é um contexto que herda de _Pess
     w = x1..baskara { 
         c = -1 
     };
-    
+
+=== Sintaxe compacta
+
+A sintaxe compacta permite duplicar o contexto utilizando uma lista de valores que é associado em ordem aos elementos declarados. Cada contexto terá então uma lista de elementos para serem utilizados na sintaxe compacta.
+
+Efeito similar ao acionamento de construtores de instâncias da classe.
+
+.Exemplo
+----
+	Equacao = {
+		a = 1;
+		b = 0;
+		x = 0;
+		y = ax + b;
+	};
+	f1 = Equacao(2,1); <1>
+	f2 = Equacao(1,4);
+
+	y1a = f1(0).y;
+	y1b = f1(3).y;
+	y2a = f2(0).y;
+	y2b = f2(3).y;
+----
+
+<1> f1 é subcontexto de Equacao, porém com a lista sem os elementos a e b diferente x,y
+
+==== Definindo o comportamento do operador ()
+
+É possível fazer com que o operador () não retorne um subcontexto, mas sim o valor de um vocábulo do subcontexto, através da declaração
+
+.Exemplo
+----
+	f1 = Equacao(2,1) + {
+		x -> y;
+	}; 
+	f2 = Equacao(1,4) + { 
+		x -> y;
+	};
+
+	y1a = f1(0);
+	y1b = f1(3);
+	y2a = f2(0);
+	y2b = f2(3);
+
+----
+
+No entanto seria melhor se isso pudesse já ser definido no supercontexto, evitando a repetição:
+
+.Exemplo
+----
+	Equacao = {
+		a = 1;
+		b = 0;
+		x = 0;
+		y = ax + b;
+
+		a,b -> x -> y;
+	};
+	f1 = Equacao(2,1);
+	f2 = Equacao(1,4);
+
+	y1a = f1(0);
+	y1b = f1(3);
+	y2a = f2(0);
+	y2b = f2(3);
+----
+
+
+{Equacao...}
+
 Valores literais
 ----------------
 
